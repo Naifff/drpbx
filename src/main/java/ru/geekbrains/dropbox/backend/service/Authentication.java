@@ -1,20 +1,21 @@
 package ru.geekbrains.dropbox.backend.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.geekbrains.dropbox.backend.dao.Users;
+import ru.geekbrains.dropbox.backend.dao.AutheticationDAO;
 
 @Service
 public class Authentication implements AuthenticationService {
-    @Override
-    public boolean login(String login,String pass) {
-        if(Users.user.equals(login)&&Users.pass.equals(pass)){
+    @Autowired
+    AutheticationDAO autheticationDAO;
 
-        return true;}
-        return false;
+    @Override
+    public boolean login(String user, String pass) {
+        return autheticationDAO.login(user, pass);
     }
 
     @Override
-    public void logout() {
-
+    public boolean logout() {
+        return true;
     }
 }
