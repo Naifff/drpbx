@@ -1,9 +1,9 @@
-package ru.geekbrains.dropbox.frontend.service;
+package ru.geekbrains.dropbox.frontend.dao;
 
 import java.io.*;
 import java.util.List;
 
-public interface FilesService {
+public interface FilesDAO {
     OutputStream getFileOutputStream(String fileName) throws IOException;
     File getFileByName(String fileName);
     InputStream getFileInputStream(String fileName) throws FileNotFoundException;
