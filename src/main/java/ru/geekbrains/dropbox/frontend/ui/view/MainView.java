@@ -1,45 +1,36 @@
 package ru.geekbrains.dropbox.frontend.ui.view;
 
 import com.vaadin.navigator.View;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.VerticalLayout;
-
-import com.vaadin.annotations.Theme;
-import com.vaadin.navigator.Navigator;
-import com.vaadin.navigator.PushStateNavigation;
-import com.vaadin.server.*;
-import com.vaadin.spring.annotation.SpringUI;
+import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.server.FileDownloader;
+import com.vaadin.server.StreamResource;
+import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.*;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Panel;
 import com.vaadin.ui.components.grid.ItemClickListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import ru.geekbrains.dropbox.frontend.service.FilesService;
-import ru.geekbrains.dropbox.frontend.ui.view.LoginView;
-import ru.geekbrains.dropbox.frontend.ui.view.MainView;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+@SpringView(name = "")
 public class MainView extends VerticalLayout implements View {
 
     @Autowired
     FilesService filesService;
 
     private Grid<File> gridFiles = new Grid<>();
-   private FileDownloader fileDownloader;
-   private Button btnDownload = new Button("Скачать");
-   private Button btnDelete = new Button("Удалить");
-   private Panel pnlActions = new Panel();
-    public MainView() {
-        Label label = new Label("MainView.class");
-        addComponent(label);
+    private FileDownloader fileDownloader;
+    private Button btnDownload = new Button("Скачать");
+    private Button btnDelete = new Button("Удалить");
+    private Panel pnlActions = new Panel();
 
-
-         VerticalLayout layoutSource = new VerticalLayout();
-        layoutSource.setSizeUndefined();
+    @Override
+    public void enter(ViewChangeListener.ViewChangeEvent event) {
+        setSizeUndefined();
 
         gridFiles.addColumn(File::getName).setCaption("File");
         gridFiles.setSizeFull();
@@ -47,7 +38,6 @@ public class MainView extends VerticalLayout implements View {
 
         // Выбираем файл который скачаем
         gridFiles.addItemClickListener(new ItemClickListener<File>() {
-
             @Override
             public void itemClick(Grid.ItemClick<File> itemClick) {
                 // Удаляем старый даунлоадер
@@ -95,10 +85,28 @@ public class MainView extends VerticalLayout implements View {
         pnlActions.setSizeUndefined();
         pnlActions.setContent(layoutActions);
         layoutActions.addComponents(uploadFile, btnDelete, btnDownload);
-        layoutSource.addComponents(gridFiles, pnlActions);
-//        this.setContent(layoutSource);
-        addComponent(layoutSource);
+        addComponents(gridFiles, pnlActions);
+        addComponent(new Button("Выход " + SecurityContextHolder.getContext().getAuthentication().getName(), clickEvent -> {
+            //getUI().getPage().open("/logout", null);
+            getUI().getPage().setLocation("/logout");
+        }));
 
+        HorizontalLayout layoutFilter = new HorizontalLayout();
+        TextField textFilter = new TextField();
+        Button btnFilterName = new Button("Поиск", clickEvent -> {
+            gridFiles.setItems(
+                    filesService
+                            .getFileList()
+                            .stream()
+                            .filter(x -> x.getName().contains(textFilter.getValue()))
+            );
+        });
+        layoutFilter.addComponents(textFilter, btnFilterName);
+        addComponent(layoutFilter);
+    }
+
+    private void startedUpload(Upload.StartedEvent event) {
+        Notification.show("UploadStart");
     }
 
     private StreamResource createResource(String fileName) {

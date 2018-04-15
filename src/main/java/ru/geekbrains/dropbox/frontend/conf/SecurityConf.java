@@ -1,5 +1,6 @@
 package ru.geekbrains.dropbox.frontend.conf;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -29,14 +30,17 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http.authorizeRequests()
-.antMatchers("/vaadinServlet/", "/VAADIN/", "/PUSH/", "/UIDL/", "/login", "/login/", "/register", "/environment").permitAll()
-.antMatchers("/").fullyAuthenticated()
-.and()
-.csrf().disable()
-.exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login/"))
-.and()
-.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
+                .antMatchers("/vaadinServlet/**", "/VAADIN/**", "/PUSH/**",
+                        "/UIDL/**", "/login", "/login/**", "/register",
+                        "/environment").permitAll()
+                .antMatchers("/**").fullyAuthenticated()
+                .and()
+                .csrf().disable()
+                .exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
+                .and()
+                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
     }
 
     @Bean
