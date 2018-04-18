@@ -1,13 +1,12 @@
 package ru.geekbrains.dropbox.frontend.dao;
 
+import com.vaadin.ui.TextField;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -68,4 +67,19 @@ public class FilesDAOImpl implements FilesDAO {
             userFiles.mkdirs();
         return userPath;
     }
+
+
+    public List<File> filterList(List<TextField> textFields) {
+        Set<File> set = new HashSet<>();
+        textFields.forEach(textField ->
+                set.addAll(getFileList()
+                        .stream()
+                        .filter(file -> file.getName()
+                                .contains(textField.getValue()))
+                        .collect(Collectors.toList())));
+        List<File> list = new ArrayList<>();
+        list.addAll(set);
+        return list;
+    }
+
 }

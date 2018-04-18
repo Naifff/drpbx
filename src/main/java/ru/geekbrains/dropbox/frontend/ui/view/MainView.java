@@ -20,6 +20,9 @@ import java.io.OutputStream;
 public class MainView extends VerticalLayout implements View {
 
     @Autowired
+    Filter filter;
+
+    @Autowired
     FilesService filesService;
 
     private Grid<File> gridFiles = new Grid<>();
@@ -27,6 +30,8 @@ public class MainView extends VerticalLayout implements View {
     private Button btnDownload = new Button("Скачать");
     private Button btnDelete = new Button("Удалить");
     private Panel pnlActions = new Panel();
+    private HorizontalLayout filterLayout = new HorizontalLayout();
+
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
@@ -91,6 +96,11 @@ public class MainView extends VerticalLayout implements View {
             getUI().getPage().setLocation("/logout");
         }));
 
+        filterLayout.setSizeFull();
+        filterLayout.addComponents(filter);
+        filter.apply(gridFiles);
+
+
         HorizontalLayout layoutFilter = new HorizontalLayout();
         TextField textFilter = new TextField();
         Button btnFilterName = new Button("Поиск", clickEvent -> {
@@ -102,7 +112,8 @@ public class MainView extends VerticalLayout implements View {
             );
         });
         layoutFilter.addComponents(textFilter, btnFilterName);
-        addComponent(layoutFilter);
+//        addComponent(layoutFilter);
+        addComponent(filterLayout);
     }
 
     private void startedUpload(Upload.StartedEvent event) {
