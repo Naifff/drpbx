@@ -8,20 +8,14 @@ package alg;
 import java.util.Iterator;
 
 public class dz4 {
-    Iterator<Integer> iterator=new Iterator<Integer>() {
-        @Override
-        public boolean hasNext() {
-            return false;
-        }
-
-        @Override
-        public Integer next() {
-            return null;
-        }
-    };
+    public static void main(String[] args) {
+        
+    }
 
 
 }
+
+//------------------------------------------------------------------------------------
 
 class MyIterator{
      private DoublyNode current;
@@ -33,7 +27,7 @@ class MyIterator{
          this.reset();
      }
 
-     private void reaet(){
+     private void reset(){
          this.current=list.getFirst();
          this.previous=null;
      }
@@ -42,10 +36,45 @@ class MyIterator{
          return current.next==null;
      }
 
+    public void nextLink (){
+        previous = current;
+        current = current . next;
+    }
+    public DoublyNode getCurrent (){
+        return current;
+    }
+    public void insertAfter ( String name , int age ){
+        DoublyNode newLink = new DoublyNode ( name , age );
+        if ( list . isEmpty ()){
+            list . setLast ( newLink );
+            current = newLink;
+        } else {
+            newLink . next = current . next;
+            current . next = newLink;
+            nextLink ();
+        }
+    }
+    public void insertBeforeFirst ( String name , int age ){
+        DoublyNode newLink = new DoublyNode ( name , age );
+        if ( previous == null ){
+            newLink . next = list . getFirst ();
+            list . setFirst ( newLink );
+            reset ();
+        }
+        else{
+            newLink . next = previous . next;
+            previous . next = newLink;
+            current = newLink;
+        }
+
+
+
 
 
 
 }
+
+//---------------------------------------------------------------------------------
 
 class DoublyNode {
     public String name;
@@ -71,17 +100,55 @@ class DoublyNode {
         DoublyNode other = (DoublyNode) obj;
         return other.name.equals(this.name) && other.age == this.age;
     }
+
+    public void display (){
+        System . out . println ( "Name: " + this . name + ", age: " + this . age );
+    }
 }
 
-class MyDoublyLinkedList{
+//-------------------------------------------------------------------------------
+
+class MyDoublyLinkedList {
 
     private DoublyNode head;
     private DoublyNode tail;
-    public  MyDoublyLinkedList(){}
 
-    public DoublyNode getFirst(){
-        return this.head;
+    public MyDoublyLinkedList() {
+        head=null;
+        tail=null;
     }
 
+    public DoublyNode getFirst() {
+        return head;
+    }
+
+    public DoublyNode getLast() {
+        return tail;
+    }
+
+    public void setFirst(DoublyNode first) {
+        head = first;
+    }
+
+    public void setLast(DoublyNode last) {
+        tail = last;
+    }
+
+    public MyIterator getIterator() {
+        return new MyIterator(this);
+    }
+
+    public boolean isEmpty() {
+        return (head == null);
+    }
+
+    public void display() {
+        DoublyNode current = head;
+        while (current != null) {
+            current.display();
+            current = current.next;
+        }
+    }
+}
 
 }
