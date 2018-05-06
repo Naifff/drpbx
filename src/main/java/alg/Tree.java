@@ -14,7 +14,7 @@ public class Tree {
      * несбалансированными.
      * */
 
-    public void insert(Person p) {
+    public void insert(int p) {
         TreeNode node = new TreeNode(p);
         if (root == null) {
             root = node;
@@ -23,7 +23,7 @@ public class Tree {
             TreeNode parent = null;
             while (true) {
                 parent = current;
-                if (p.id < current.person.id) {
+                if (p < current.value) {
                     current = current.left;
                     if (current == null) {
                         parent.left = node;
@@ -43,8 +43,8 @@ public class Tree {
 
     public TreeNode getNode(int key) {
         TreeNode current = root;
-        while (current.person.id != key) {
-            if (key < current.person.id)
+        while (current.value != key) {
+            if (key < current.value)
                 current = current.left;
             else
                 current = current.right;
@@ -83,9 +83,9 @@ public class Tree {
         boolean isLeftChild = true;
 
         // searching for node
-        while (current.person.id != id) {
+        while (current.value != id) {
             parent = current;
-            if (id < current.person.id) {
+            if (id < current.value) {
                 current = current.left;
                 isLeftChild = true;
             } else {

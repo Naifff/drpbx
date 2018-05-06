@@ -1,18 +1,17 @@
 package alg;
 
 public class TreeNode {
-    Person person;
+    int value;
 
     public TreeNode left;
     public TreeNode right;
 
-    protected TreeNode(Person person) {
-        this.person = person;
+    protected TreeNode(int value) {
+        this.value = value;
     }
 
     @Override
     public String toString() {
-        return "(ID: " + person.id + "; Name: " +
-                person.name + "; Age: " + person.age + ")";
+        return "(ID: " + value +")";
     }
 }
