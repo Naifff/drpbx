@@ -2,6 +2,14 @@ package alg;
 
 public class Tree {
     private TreeNode root;
+
+    @Override
+    public String toString() {
+        return "Tree{" +
+                "root=" + root +
+                '}';
+    }
+
     /**
      * **** Создать программу для построения двоичного дерева.
      * В цикле построить двадцать деревьев из 32-63 элементов.
@@ -63,6 +71,11 @@ public class Tree {
         }
     }
 
+    public boolean isBalansed(){
+        
+        return true;
+    }
+
     public void displayTreeToConsole() {
         inOrderTravers(root);
     }
@@ -75,6 +88,23 @@ public class Tree {
             current = current.left;
         }
         return last;
+    }
+
+    public boolean isBalanced(){
+        return Math.abs(countDepth(root.left)-countDepth(root.right))<=((true)?0:1);
+    }
+
+    private int countDepth(TreeNode t){
+        if (t == null){ return 0;}
+
+        int left=0;
+        int right=0;
+
+        if(t.left!=null){left=countDepth(t.left);}
+
+        if(t.right!=null){right=countDepth(t.right);}
+
+        return 1+((left>right)?left:right);
     }
 
     public boolean delete (int id) {

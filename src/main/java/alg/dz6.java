@@ -6,4 +6,19 @@ package alg;
 2. Проанализировать, какой процент созданных деревьев является несбалансированными.
  */
 public class dz6 {
+    public static void main(String[] args) {
+        int count =0;
+        int all=5000000;
+        for (int j = 0; j <all ; j++) {
+
+
+        Tree tree = new Tree();
+                for (int i = 0; i < 32; i++) {
+            tree.insert((int)(Math.random()*200-100));
+        }
+
+        if(tree.isBalanced()){count++;}
+        }
+        System.out.println((double) (count)/all*100+"%");
+    }
 }
